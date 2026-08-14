@@ -48,6 +48,8 @@ create_page(t_type type) {
 		return (NULL);
 	p->type = type;
 	p->map_size = map_size;
+	p->ptr_end = (char*)p + sizeof(t_page);
+	p->size = 0;
 	p->blocks = NULL;
 	p->next = NULL;
 
@@ -69,7 +71,8 @@ print_block(t_block* b) {
     char buf[128];
     int  len;
 
-    len = snprintf(buf, sizeof(buf), "free: %d\nsize: %zu\n", b->free, b->size);
+    len = snprintf(buf, sizeof(buf), "free: %d\nsize: %zu\nsize - block: %zu\n",
+				   b->free, b->size, b->size - sizeof(t_block));
     write(2, buf, len);
 }
 
@@ -89,17 +92,25 @@ lookup_page(size_t size, t_type type) {
 }
 
 t_block*
-add_block(size_t size) {
-	t_block* b = NULL;
+add_block(t_page *p, size_t size) {
+	t_block* b = p->blocks;
+	p->size += size;
 	while (b) {
 		if (b->free == True) {
-			b->size = (size + sizeof(t_block));
+			b->size = p->size;
 			b->free = False;
+			b->next = NULL;
 			return (b);
 		}
 		b = b->next;
 	}
-	return (NULL);
+
+	t_block* new = (t_block*)p->ptr_end;
+	new->size = p->size;
+	new->free = False;
+	new->next = NULL;
+	p->ptr_end = (char*)p->ptr_end + size; 
+	return (new);
 }
 
 t_block*
@@ -109,7 +120,7 @@ create_block(size_t size, t_type type) {
 	p = lookup_page(size, type);
 	if (!p)
 		return (NULL);
-	b = add_block(size);
+	b = add_block(p, size + sizeof(t_block));
 	if (!b)
 		return (NULL);
 	print_block(b);

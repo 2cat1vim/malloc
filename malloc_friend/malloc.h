@@ -36,6 +36,8 @@ typedef struct s_block {
 typedef struct s_page {
     t_type type;
     size_t map_size;
+    size_t size;
+    char* ptr_end;
     t_block *blocks;
     struct s_page *next;
 } t_page;
