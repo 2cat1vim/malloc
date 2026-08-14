@@ -12,13 +12,8 @@
 
 # define PAGE_SIZE (getpagesize())
 
-# define TINY_MAX 400
-# define SMALL_MAX 800
-# define LARGE_MAX 1200
-
-# define ZONE_TINY 0
-# define ZONE_SMALL 1
-# define ZONE_LARGE 2
+# define TINY_MAX 100
+# define SMALL_MAX 200
 
 typedef enum s_bool {
     False,
@@ -33,17 +28,17 @@ typedef enum s_type {
 
 typedef struct s_block {
     size_t size;
-    int free;
+    t_bool free;
     struct s_block* next;
     struct s_block* prev;
 } t_block;
 
-typedef struct s_zone {
+typedef struct s_page {
     t_type type;
-    size_t map_size
+    size_t map_size;
     t_block *blocks;
-    struct s_zone *next;
-} t_zone;
+    struct s_page *next;
+} t_page;
 
 void* malloc(size_t size);
 void free(void* ptr);
