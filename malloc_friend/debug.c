@@ -2,7 +2,7 @@
 
 void
 print_debug(char *s) {
-    char buf[128];
+    char buf[400];
     int  len;
 
     len = snprintf(buf, sizeof(buf), "%s\n", s);
@@ -11,7 +11,7 @@ print_debug(char *s) {
 
 void
 print_page(t_page* p) {
-    char buf[128];
+    char buf[400];
     int  len;
 
     len = snprintf(buf, sizeof(buf), "PAGE -> page p: %p\ntype: %d\nsize: %zu\nptr_end: %p\nsize - page: %zu\n",
@@ -21,7 +21,7 @@ print_page(t_page* p) {
 
 void
 print_block(t_block* b) {
-    char buf[128];
+    char buf[400];
     int  len;
 
     len = snprintf(buf, sizeof(buf), "BLOCK -> \nfree: %d\nsize: %zu\nsize - block: %zu\n",

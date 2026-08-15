@@ -3,7 +3,14 @@
 t_page*
 create_page(t_type type) {
 	print_debug("new page");
-	t_page* p = mmap(NULL, PAGE_SIZE,
+	size_t map_size = 0;
+	if (type == TINY)
+		map_size = (size_t)TINY_MMAP;
+	else if (type == SMALL)
+		map_size = (size_t)SMALL_MMAP;
+	else
+		map_size = LARGE_BYTES;
+	t_page* p = mmap(NULL, map_size,
 					PROT_READ | PROT_WRITE,
 					MAP_PRIVATE | MAP_ANONYMOUS,
 					-1, 0);
@@ -21,18 +28,7 @@ create_page(t_type type) {
 
 t_page*
 search_page_space(size_t size, t_type type) {
-	t_page *p;
-	switch (type) {
-		case TINY:
-			p = page[TINY];
-			break;
-		case SMALL:
-			p = page[SMALL];
-			break;
-		default:
-			p = page[LARGE];
-			break;
-	}
+	t_page *p = page[type];
 	while (p) {
 		if (page_has_space(p, size) == True)
 			return (p);
@@ -43,7 +39,7 @@ search_page_space(size_t size, t_type type) {
 
 t_page*
 lookup_page(size_t size, t_type type) {
-	t_page* p = search_page_space(size, type);
+	t_page* p = search_page_space(size + sizeof(t_block), type);
 	if (!p) {
 		p = create_page(type);
 		if (!p)
@@ -55,9 +51,9 @@ lookup_page(size_t size, t_type type) {
 
 t_bool
 page_has_space(t_page* page, size_t size) {
-    (void)page;
-	if ((size_t)PAGE_SIZE >= size + sizeof(t_block))
+	if (page->size + size <= (size_t)PAGE_SIZE)
         return (True);
+	print_debug("not enough space");
 	return (False);
 }
 

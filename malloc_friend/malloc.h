@@ -12,8 +12,11 @@
 
 # define PAGE_SIZE (getpagesize())
 
-# define TINY_MAX 100
-# define SMALL_MAX 200
+# define N_ALLOC 100
+
+# define TINY_BYTES 100
+# define SMALL_BYTES 1000
+# define LARGE_BYTES 8000
 
 typedef enum s_bool {
     False,
@@ -32,6 +35,9 @@ typedef struct s_block {
     struct s_block* next;
     struct s_block* prev;
 } t_block;
+
+# define TINY_MMAP (N_ALLOC * (TINY_BYTES + sizeof(t_block) / PAGE_SIZE + 1) * PAGE_SIZE)
+# define SMALL_MMAP (N_ALLOC * (SMALL_BYTES + sizeof(t_block) / PAGE_SIZE + 1) * PAGE_SIZE)
 
 typedef struct s_page {
     t_type type;
@@ -59,4 +65,5 @@ t_block* create_block(size_t size, t_type type);
 void print_debug(char *s);
 void print_page(t_page* p);
 void print_block(t_block* b);
+
 # endif

@@ -16,7 +16,7 @@ select_block(t_page *p, size_t size) {
 	t_block* last = NULL;
 	p->size += size;
 	while (node) {
-		if (node->free && (node->size + p->size) <= (size_t)PAGE_SIZE)
+		if ((node->size + size) <= (size_t)PAGE_SIZE)
 			return (node);
 		last = node;
 		node = node->next;
