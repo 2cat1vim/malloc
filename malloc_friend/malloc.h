@@ -35,14 +35,28 @@ typedef struct s_block {
 
 typedef struct s_page {
     t_type type;
-    size_t map_size;
     size_t size;
-    char* ptr_end;
+    void* ptr_end;
     t_block *blocks;
     struct s_page *next;
 } t_page;
 
+static t_page* page[3] = {NULL, NULL, NULL};
+
 void* malloc(size_t size);
 void free(void* ptr);
 
+t_bool page_has_space(t_page* page, size_t size);
+t_page* search_page_space(size_t size, t_type type);
+t_page* create_page(t_type type);
+t_page* lookup_page(size_t size, t_type type);
+
+
+t_block* add_block(t_page *p, size_t size);
+t_block* select_block(t_page *p, size_t size);
+t_block* create_block(size_t size, t_type type);
+
+void print_debug(char *s);
+void print_page(t_page* p);
+void print_block(t_block* b);
 # endif
