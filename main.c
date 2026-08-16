@@ -13,6 +13,7 @@ int
 main(void) {
 	malloc(100);
 	malloc(8000);
+	malloc(400000);
 	malloc(10);
 	malloc(35);
 	print_mem();

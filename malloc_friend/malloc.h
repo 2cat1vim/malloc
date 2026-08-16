@@ -54,7 +54,7 @@ void free(void* ptr);
 
 t_bool page_has_space(t_page* page, size_t size);
 t_page* search_page_space(size_t size, t_type type);
-t_page* create_page(t_type type);
+t_page* create_page(t_type type, size_t size);
 t_page* lookup_page(size_t size, t_type type);
 
 

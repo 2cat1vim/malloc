@@ -13,24 +13,24 @@ void
 print_page(t_page* p) {
     char buf[1000];
     int  len;
-    int capacity = 0;
-    if (p->type == TINY)
-        capacity = TINY_MMAP;
-    else if (p->type == SMALL)
-        capacity = SMALL_MMAP;
-    else
-        capacity = LARGE_BYTES + sizeof(t_page) + sizeof(t_block);
 
     int i = 0;
     while (p) {
+        int capacity = 0;
+        if (p->type == TINY)
+            capacity = TINY_MMAP;
+        else if (p->type == SMALL)
+            capacity = SMALL_MMAP;
+        else
+            capacity = p->size;
         len = snprintf(buf, sizeof(buf), "<=========>\nPAGE[%d]: %p\nTYPE OF PAGE: %d\nCAPACITY: %d\nUSED SIZE: %zu\n",
                     i, p, p->type, capacity, p->size);
         write(2, buf, len);
         t_block *b = p->blocks;
         int j = 0;
         while (b) {
-            len = snprintf(buf, sizeof(buf), "BLOCK[%d]: %p | USED SIZE: %zu\n",
-                        j, b, b->size);
+            len = snprintf(buf, sizeof(buf), "BLOCK[%d]: %p | USED SIZE: %zu | FREE: %s\n",
+                        j, b, b->size, (b->free == True) ? "YES" : "NO");
             write(2, buf, len);
             b = b->next;
             j++;
