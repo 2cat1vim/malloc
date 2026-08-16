@@ -39,6 +39,5 @@ create_block(size_t size, t_type type) {
 	b = select_block(p, size + sizeof(t_block));
 	if (!b)
 		return (NULL);
-	print_block(b);
 	return (b);
 }

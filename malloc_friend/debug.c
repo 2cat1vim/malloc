@@ -11,20 +11,35 @@ print_debug(char *s) {
 
 void
 print_page(t_page* p) {
-    char buf[400];
+    char buf[1000];
     int  len;
+    int capacity = 0;
+    if (p->type == TINY)
+        capacity = TINY_MMAP;
+    else if (p->type == SMALL)
+        capacity = SMALL_MMAP;
+    else
+        capacity = LARGE_BYTES;
 
-    len = snprintf(buf, sizeof(buf), "PAGE -> page p: %p\ntype: %d\nsize: %zu\nptr_end: %p\nsize - page: %zu\n",
-	               p, p->type, p->size, p->ptr_end, p->size - sizeof(t_page));
-    write(2, buf, len);
+    int i = 0;
+    while (p) {
+        len = snprintf(buf, sizeof(buf), "<=========>\nPAGE[%d]: %p\nTYPE OF PAGE: %d\nCAPACITY: %d\nUSED SIZE: %zu\n",
+                    i, p, p->type, capacity, p->size);
+        write(2, buf, len);
+        t_block *b = p->blocks;
+        int j = 0;
+        while (b) {
+            len = snprintf(buf, sizeof(buf), "BLOCK[%d]: %p\nCAPACITY: %d\nUSED SIZE: %zu\n<=========>",
+                        j, b, capacity, b->size);
+            write(2, buf, len);
+            b = b->next;
+            j++;
+        }
+        p = p->next;
+        i++;
+    }
 }
 
-void
-print_block(t_block* b) {
-    char buf[400];
-    int  len;
-
-    len = snprintf(buf, sizeof(buf), "BLOCK -> \nfree: %d\nsize: %zu\nsize - block: %zu\n",
-				   b->free, b->size, b->size - sizeof(t_block));
-    write(2, buf, len);
+void print_mem(void) {
+	print_page(page[0]);
 }

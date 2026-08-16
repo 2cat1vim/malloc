@@ -47,7 +47,7 @@ typedef struct s_page {
     struct s_page *next;
 } t_page;
 
-static t_page* page[3] = {NULL, NULL, NULL};
+extern t_page* page[3];
 
 void* malloc(size_t size);
 void free(void* ptr);
@@ -64,6 +64,5 @@ t_block* create_block(size_t size, t_type type);
 
 void print_debug(char *s);
 void print_page(t_page* p);
-void print_block(t_block* b);
-
+void print_mem(void);
 # endif

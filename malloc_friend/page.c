@@ -1,8 +1,8 @@
 #include "malloc.h"
+t_page* page[3] = {NULL, NULL, NULL};
 
 t_page*
 create_page(t_type type) {
-	print_debug("new page");
 	size_t map_size = 0;
 	if (type == TINY)
 		map_size = (size_t)TINY_MMAP;
@@ -45,7 +45,6 @@ lookup_page(size_t size, t_type type) {
 		if (!p)
 			return (NULL);
 	}
-    print_page(p);
 	return (p);
 }
 
@@ -53,7 +52,6 @@ t_bool
 page_has_space(t_page* page, size_t size) {
 	if (page->size + size <= (size_t)PAGE_SIZE)
         return (True);
-	print_debug("not enough space");
 	return (False);
 }
 
