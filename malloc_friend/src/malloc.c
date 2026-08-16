@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 void*
 malloc(size_t size) {
@@ -14,14 +14,4 @@ malloc(size_t size) {
 	if (!b)
 		return (NULL);
 	return ((void*)b) + sizeof(t_block);
-}
-
-void
-free(void *ptr) {
-	if (!ptr)
-		return ; 
-	void *pptr = ptr - sizeof(size_t);
-	size_t map_size = *(size_t *)pptr;
-	if (munmap(pptr, map_size) == -1)
-		printf("Free error");
 }

@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 t_page* page[3] = {NULL, NULL, NULL};
 
@@ -76,7 +76,9 @@ t_bool
 page_has_space(t_page* page, size_t size) {
 	if (page->type == LARGE)
 		return (False);
-	if (page->size + size <= (page->type == SMALL) ? (size_t)SMALL_MMAP : (size_t)TINY_MMAP)
+
+	size_t limit = (page->type == SMALL) ? (size_t)SMALL_MMAP : (size_t)TINY_MMAP;
+	if (page->size + size <= limit)
         return (True);
 	return (False);
 }

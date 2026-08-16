@@ -4,10 +4,11 @@ CFLAGS = -g -Wall -Wextra -Werror
 AR = ar
 ARFLAGS = rcs
 
-SRC = malloc.c \
-	  page.c \
-	  block.c \
-	  debug.c
+SRC = src/malloc.c \
+	  src/page.c \
+	  src/block.c \
+	  src/debug.c \
+	  src/free.c
 OBJS = $(SRC:.c=.o)
 
 all: $(NAME)

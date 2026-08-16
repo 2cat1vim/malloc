@@ -1,4 +1,4 @@
-#include "malloc_friend/malloc.h"
+#include "malloc_friend/include/malloc.h"
 
 void
 print_debugs(char* ptr) {
@@ -14,8 +14,8 @@ main(void) {
 	malloc(100);
 	malloc(8000);
 	malloc(400000);
-	malloc(10);
-	malloc(35);
-	print_mem();
+	for (int i = 0; i < 128; i++)
+		malloc(96);
+	show_alloc_mem();
 	return (0);	
 }

@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include "../include/malloc.h"
 
 t_block*
 add_block(t_page *p, size_t size) {
