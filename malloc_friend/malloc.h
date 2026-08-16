@@ -36,8 +36,8 @@ typedef struct s_block {
     struct s_block* prev;
 } t_block;
 
-# define TINY_MMAP (N_ALLOC * (TINY_BYTES + sizeof(t_block) / PAGE_SIZE + 1) * PAGE_SIZE)
-# define SMALL_MMAP (N_ALLOC * (SMALL_BYTES + sizeof(t_block) / PAGE_SIZE + 1) * PAGE_SIZE)
+# define TINY_MMAP (((TINY_BYTES + sizeof(t_block)) * N_ALLOC + PAGE_SIZE - 1) / PAGE_SIZE * PAGE_SIZE)
+# define SMALL_MMAP (((SMALL_BYTES + sizeof(t_block)) * N_ALLOC + PAGE_SIZE - 1) / PAGE_SIZE * PAGE_SIZE)
 
 typedef struct s_page {
     t_type type;

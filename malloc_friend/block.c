@@ -16,16 +16,18 @@ select_block(t_page *p, size_t size) {
 	t_block* last = NULL;
 	p->size += size;
 	while (node) {
-		if ((node->size + size) <= (size_t)PAGE_SIZE)
+		if (node->free == True)
 			return (node);
 		last = node;
 		node = node->next;
 	}
 	if (last) {
 		node = add_block(p, size);
+		last->next = node;
 		return (node);
 	}
 	last = add_block(p, size);
+	p->blocks = last;
 	return (last);
 }
 

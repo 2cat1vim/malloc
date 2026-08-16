@@ -19,7 +19,7 @@ print_page(t_page* p) {
     else if (p->type == SMALL)
         capacity = SMALL_MMAP;
     else
-        capacity = LARGE_BYTES;
+        capacity = LARGE_BYTES + sizeof(t_page) + sizeof(t_block);
 
     int i = 0;
     while (p) {
@@ -29,8 +29,8 @@ print_page(t_page* p) {
         t_block *b = p->blocks;
         int j = 0;
         while (b) {
-            len = snprintf(buf, sizeof(buf), "BLOCK[%d]: %p\nCAPACITY: %d\nUSED SIZE: %zu\n<=========>",
-                        j, b, capacity, b->size);
+            len = snprintf(buf, sizeof(buf), "BLOCK[%d]: %p | USED SIZE: %zu\n",
+                        j, b, b->size);
             write(2, buf, len);
             b = b->next;
             j++;
@@ -42,4 +42,6 @@ print_page(t_page* p) {
 
 void print_mem(void) {
 	print_page(page[0]);
+    print_page(page[1]);
+    print_page(page[2]);
 }

@@ -9,7 +9,7 @@ create_page(t_type type) {
 	else if (type == SMALL)
 		map_size = (size_t)SMALL_MMAP;
 	else
-		map_size = LARGE_BYTES;
+		map_size = LARGE_BYTES + sizeof(t_page) + sizeof(t_block);
 	t_page* p = mmap(NULL, map_size,
 					PROT_READ | PROT_WRITE,
 					MAP_PRIVATE | MAP_ANONYMOUS,
