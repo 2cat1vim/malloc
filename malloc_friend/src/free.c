@@ -1,29 +1,29 @@
 #include "../include/malloc.h"
 
-void select_free_type(t_type type, void* ptr, size_t size, t_block* b) {
-	if (type == LARGE) {
-		if (munmap(ptr, size) == -1)
-			printf("Free error");
-		return ;
-	}
-	b->free = True;
-}
-
-void free_ptr(t_block *match) {
-	t_type type;
+static void free_ptr(t_block *match) {
 	for (size_t i = 0; i < 3; i++) {
+		t_page* prev_page = NULL;
 		t_page* head_page = page[i];
 		while (head_page) {
 			t_block* head_block = head_page->blocks;
 			while (head_block) {
 				if (head_block == match) {
-					type = (head_page->type == TINY) ? TINY :
-						   (head_page->type == SMALL) ? SMALL : LARGE;
-					select_free_type(type, head_page, head_page->size, head_block);
-					return ;
+					if (head_page->type == LARGE) {
+						if (prev_page)
+							prev_page->next = head_page->next;
+						else
+							page[i] = head_page->next;
+						if (munmap(head_page, head_page->size) == -1)
+							printf("Free error");
+						return ;
+					}
+					else {
+						head_block->free = True;
+					}
 				}
 				head_block = head_block->next;
 			}
+			prev_page = head_page;
 			head_page = head_page->next;
 		}
 	}
