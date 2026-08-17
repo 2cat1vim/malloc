@@ -11,11 +11,15 @@ print_debugs(char* ptr) {
 
 int
 main(void) {
-	malloc(100);
-	malloc(8000);
-	malloc(400000);
-	for (int i = 0; i < 128; i++)
-		malloc(96);
+	char* lol = malloc(100);
+	(void)lol;
+	char* xd = malloc(8200);
+	char* xd2 = malloc(8200);
+	(void)xd2;
+	(void)xd;
+	show_alloc_mem();
+	free(lol);
+	free(xd);
 	show_alloc_mem();
 	return (0);	
 }

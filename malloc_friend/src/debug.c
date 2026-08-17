@@ -30,7 +30,8 @@ show_alloc_mem(void) {
                   (i == 0) ? "TINY" : (i == 1) ? "SMALL" : "LARGE", h_p);
             t_block *h_b = h_p->blocks;
             while (h_b) {
-                printf("%p - %p : %zu bytes\n", h_b, h_b + h_b->size, h_b->size);
+                printf("%p - %p : %s : %zu bytes\n",
+                    h_b, h_b + h_b->size, (h_b->free == True) ? "Free" : "Not Free", h_b->size);
                 total += h_b->size;
                 h_b = h_b->next;
             }
