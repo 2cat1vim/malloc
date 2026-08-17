@@ -1,14 +1,5 @@
 #include "malloc_friend/include/malloc.h"
 
-void
-print_debugs(char* ptr) {
-    char buf[10000];
-    int  len;
-
-    len = snprintf(buf, sizeof(buf), "Pointer: %p : %s\n", ptr, ptr);
-    write(2, buf, len);
-}
-
 int
 main(void) {
 	char* lol = malloc(100);

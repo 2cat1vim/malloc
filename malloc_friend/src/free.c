@@ -1,39 +1,28 @@
 #include "../include/malloc.h"
 
-static void free_ptr(t_block *match) {
-	for (size_t i = 0; i < 3; i++) {
-		t_page* prev_page = NULL;
-		t_page* head_page = page[i];
-		while (head_page) {
-			t_block* head_block = head_page->blocks;
-			while (head_block) {
-				if (head_block == match) {
-					if (head_page->type == LARGE) {
-						if (prev_page)
-							prev_page->next = head_page->next;
-						else
-							page[i] = head_page->next;
-						if (munmap(head_page, head_page->size) == -1)
-							printf("Free error");
-						return ;
-					}
-					else {
-						head_block->free = True;
-					}
-				}
-				head_block = head_block->next;
-			}
-			prev_page = head_page;
-			head_page = head_page->next;
-		}
+static void
+free_ptr(t_ptr* i_ptr) {
+	if (i_ptr->head_page->type == LARGE) {
+		if (i_ptr->prev_page)
+			i_ptr->prev_page->next = i_ptr->head_page->next;
+		else
+			page[i_ptr->head_page->type] = i_ptr->head_page->next;
+		if (munmap(i_ptr->head_page, i_ptr->head_page->size) == -1)
+			printf("Free error");
+		return ;
 	}
+	else
+		i_ptr->head_block->free = True;
 }
 
 void
 free(void *ptr) {
 	if (!ptr)
 		return ;
+	t_ptr info;
 	ptr -= sizeof(t_block);
-	t_block *match = (t_block*)ptr;
-	free_ptr(match);
+	t_ptr* i_ptr = get_infos((t_block*)ptr, &info);
+	if (!i_ptr)
+		return ;
+	free_ptr(i_ptr);
 }

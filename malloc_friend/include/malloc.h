@@ -25,14 +25,14 @@ typedef enum s_bool {
 typedef enum s_type {
     TINY,
     SMALL,
-    LARGE
+    LARGE,
+    TYPE_SIZE
 } t_type;
 
 typedef struct s_block {
     size_t size;
     t_bool free;
     struct s_block* next;
-    struct s_block* prev;
 } t_block;
 
 # define TINY_MMAP (((TINY_BYTES) * N_ALLOC + PAGE_SIZE - 1) / PAGE_SIZE * PAGE_SIZE)
@@ -46,10 +46,18 @@ typedef struct s_page {
     struct s_page *next;
 } t_page;
 
-extern t_page* page[3];
+typedef struct s_ptr {
+    t_block* prev_block;
+    t_block* head_block;
+    t_page* prev_page;
+    t_page* head_page;
+} t_ptr;
+
+extern t_page* page[TYPE_SIZE];
 
 void* malloc(size_t size);
 void free(void* ptr);
+void* realloc(void* ptr, size_t size);
 
 t_bool page_has_space(t_page* page, size_t size);
 t_page* search_page_space(size_t size, t_type type);
@@ -60,6 +68,13 @@ t_page* lookup_page(size_t size, t_type type);
 t_block* add_block(t_page *p, size_t size);
 t_block* select_block(t_page *p, size_t size);
 t_block* create_block(size_t size, t_type type);
+
+t_ptr* get_infos(void* ptr, t_ptr* info);
+
+void print_hex(void *p);
+void print_nbr(size_t n);
+void pout(const char* s);
+void pouts(const char* s);
 
 void show_alloc_mem(void);
 # endif

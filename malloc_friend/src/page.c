@@ -1,6 +1,6 @@
 #include "../include/malloc.h"
 
-t_page* page[3] = {NULL, NULL, NULL};
+t_page* page[TYPE_SIZE] = {NULL, NULL, NULL};
 
 t_page*
 mmap_page(t_page* p, t_type type, size_t size) {

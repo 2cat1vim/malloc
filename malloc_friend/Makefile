@@ -9,7 +9,8 @@ SRC = src/malloc.c \
 	  src/block.c \
 	  src/debug.c \
 	  src/free.c \
-	  src/realloc.c
+	  src/realloc.c \
+	  src/utils.c
 OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
