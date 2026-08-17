@@ -1,31 +1,17 @@
 #include "../include/malloc.h"
 
-// BASIC COLORS
-# define RST "\e[0m"
-# define RED "\e[0;31m"
-# define GRN "\e[0;32m"
-# define YEL "\e[0;33m"
-# define CYN "\e[0;36m"
-
-// BOLD COLORS
-# define BRED "\e[1;31m"
-# define BGRN "\e[1;32m"
-# define BYEL "\e[1;33m"
-# define BCYN "\e[1;36m"
-
-// UNDERLINE COLORS
-# define URED "\e[4;31m"
-# define UGRN "\e[4;32m"
-# define UYEL "\e[4;33m"
-# define UCYN "\e[4;36m"
+# define SELECT_TYPE(n) \
+    (n == 0) ? "TINY" : (n == 1) ? "SMALL" : "LARGE"
+# define IS_FREE(f) \
+    (f == True) ? "Free" : "Not Free"
 
 static void
 print_page(t_page *p) {
-    t_type i = p->type;
-    pout((i == 0) ? "TINY" : (i == 1) ? "SMALL" : "LARGE");
+    t_type n = p->type;
+    pout(SELECT_TYPE(n));
     pout(" : ");
     print_hex(p);
-    write(1, "\n", 1);
+    pout("\n");
 }
 
 static void
@@ -34,7 +20,7 @@ print_block(t_block *b) {
     pout(" - ");
     print_hex(b + b->size);
     pout(" : ");
-    pout((b->free == True) ? "Free" : "Not Free");
+    pout(IS_FREE(b->free));
     pout(" : ");
     print_nbr(b->size);
     pouts(" bytes");
