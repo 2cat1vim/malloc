@@ -32,6 +32,7 @@ typedef enum s_type {
 typedef struct s_block {
     size_t size;
     t_bool free;
+    struct s_block* prev;
     struct s_block* next;
 } t_block;
 
@@ -45,15 +46,9 @@ typedef struct s_page {
     size_t size;
     void* ptr_end;
     t_block *blocks;
+    struct s_page *prev;
     struct s_page *next;
 } t_page;
-
-typedef struct s_ptr {
-    t_block* prev_block;
-    t_block* head_block;
-    t_page* prev_page;
-    t_page* head_page;
-} t_ptr;
 
 extern t_page* page[TYPE_SIZE];
 
@@ -66,12 +61,9 @@ t_page* search_page_space(size_t size, t_type type);
 t_page* create_page(t_type type, size_t size);
 t_page* lookup_page(size_t size, t_type type);
 
-
-t_block* add_block(t_page *p, size_t size);
+t_block* add_block(t_page *p, size_t size, t_block* last);
 t_block* select_block(t_page *p, size_t size);
 t_block* create_block(size_t size, t_type type);
-
-t_ptr* get_infos(void* ptr, t_ptr* info);
 
 void print_hex(void *p);
 void print_nbr(size_t n);

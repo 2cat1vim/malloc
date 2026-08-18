@@ -1,28 +1,33 @@
 #include "../include/malloc.h"
 
 static void
-free_ptr(t_ptr* i_ptr) {
-	if (i_ptr->head_page->type == LARGE) {
-		if (i_ptr->prev_page)
-			i_ptr->prev_page->next = i_ptr->head_page->next;
+free_ptr(t_block *b, t_page* p) {
+	if (p->type == LARGE) {
+		if (p->prev)
+			p->prev->next = p->next;
 		else
-			page[i_ptr->head_page->type] = i_ptr->head_page->next;
-		if (munmap(i_ptr->head_page, i_ptr->head_page->size) == -1)
+			page[p->type] = p->next;
+		if (munmap(p, p->size) == -1)
 			printf("Free error");
 		return ;
 	}
 	else
-		i_ptr->head_block->free = True;
+		b->free = True;
 }
 
 void
 free(void *ptr) {
 	if (!ptr)
 		return ;
-	t_ptr info;
-	ptr -= sizeof(t_block);
-	t_ptr* i_ptr = get_infos((t_block*)ptr, &info);
-	if (!i_ptr)
-		return ;
-	free_ptr(i_ptr);
+
+	/* Cast ptr and minus it by sizeof(t_block) 
+			to get the position of the block */
+	char* cast_ptr_block = ptr;
+	char* cast_ptr_page = ptr;
+	cast_ptr_block -= sizeof(t_block);
+	cast_ptr_page -= (sizeof(t_block) + sizeof(t_page));
+
+	// NEED TO CHECK
+	/* Check that the block is existing and then free it */
+	free_ptr((t_block*)cast_ptr_block, (t_page*)cast_ptr_page);
 }

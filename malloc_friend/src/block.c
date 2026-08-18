@@ -1,10 +1,14 @@
 #include "../include/malloc.h"
 
 t_block*
-add_block(t_page *p, size_t size) {
+add_block(t_page *p, size_t size, t_block* last) {
 	t_block* new = (t_block*)p->ptr_end;
 	new->size = size;
 	new->free = False;
+	if (last)
+		new->prev = last;
+	else
+		new->prev = NULL;
 	new->next = NULL;
 	p->ptr_end = (void *)p->ptr_end + size; 
 	return (new);
@@ -22,11 +26,11 @@ select_block(t_page *p, size_t size) {
 		node = node->next;
 	}
 	if (last) {
-		node = add_block(p, size);
+		node = add_block(p, size, last);
 		last->next = node;
 		return (node);
 	}
-	last = add_block(p, size);
+	last = add_block(p, size, NULL);
 	p->blocks = last;
 	return (last);
 }

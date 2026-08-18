@@ -45,6 +45,7 @@ create_page(t_type type, size_t size) {
 		head = head->next;
 	}
 	head = mmap_page(head, type, map_size);
+	head->prev = last;
 	last->next = head;
 	return (head);
 }
