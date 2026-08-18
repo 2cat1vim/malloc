@@ -23,9 +23,8 @@ free(void *ptr) {
 	/* Cast ptr and minus it by sizeof(t_block) 
 			to get the position of the block */
 	char* cast_ptr_block = ptr;
-	char* cast_ptr_page = ptr;
 	cast_ptr_block -= sizeof(t_block);
-	cast_ptr_page -= (sizeof(t_block) + sizeof(t_page));
+	char* cast_ptr_page = cast_ptr_block - (sizeof(t_page));
 
 	// NEED TO CHECK
 	/* Check that the block is existing and then free it */
