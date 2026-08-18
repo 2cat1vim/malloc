@@ -2,7 +2,7 @@
 
 int
 main(void) {
-	char* lol = malloc(100);
+	char* lol = malloc(88);
 	(void)lol;
 	char* xd = malloc(8200);
 	char* xd2 = malloc(8200);

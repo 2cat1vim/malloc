@@ -3,8 +3,10 @@
 t_block*
 add_block(t_page *p, size_t size, t_block* last) {
 	t_block* new = (t_block*)p->ptr_end;
+	size_t max_block_size = SIZE_BY_TYPE(p->type, size);
 	new->size = size;
-	new->free = False;
+	new->size_max = max_block_size;
+	new->free = false;
 	if (last)
 		new->prev = last;
 	else
@@ -20,7 +22,7 @@ select_block(t_page *p, size_t size) {
 	t_block* last = NULL;
 	p->size += size;
 	while (node) {
-		if (node->free == True)
+		if (node->free == true)
 			return (node);
 		last = node;
 		node = node->next;

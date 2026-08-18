@@ -54,7 +54,7 @@ t_page*
 search_page_space(size_t size, t_type type) {
 	t_page *p = page[type];
 	while (p) {
-		if (page_has_space(p, size) == True)
+		if (page_has_space(p, size) == true)
 			return (p);
 		p = p->next;
 	}
@@ -72,14 +72,14 @@ lookup_page(size_t size, t_type type) {
 	return (p);
 }
 
-t_bool
+bool
 page_has_space(t_page* page, size_t size) {
 	if (page->type == LARGE)
-		return (False);
+		return (false);
 
 	size_t limit = LIMIT(page->type);
 	if (page->size + size <= limit)
-        return (True);
-	return (False);
+        return (true);
+	return (false);
 }
 

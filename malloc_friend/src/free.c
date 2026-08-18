@@ -12,7 +12,7 @@ free_ptr(t_block *b, t_page* p) {
 		return ;
 	}
 	else
-		b->free = True;
+		b->free = true;
 }
 
 void
@@ -20,8 +20,8 @@ free(void *ptr) {
 	if (!ptr)
 		return ;
 
-	/* Cast ptr and minus it by sizeof(t_block) 
-			to get the position of the block */
+    /* Cast ptr and minus it by sizeof(t_block/t_page) 
+			to get the position of the block/page */
 	char* cast_ptr_block = ptr;
 	cast_ptr_block -= sizeof(t_block);
 	char* cast_ptr_page = cast_ptr_block - (sizeof(t_page));

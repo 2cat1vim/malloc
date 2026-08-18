@@ -3,7 +3,7 @@
 # define SELECT_TYPE(n) \
     (n == 0) ? "TINY" : (n == 1) ? "SMALL" : "LARGE"
 # define IS_FREE(f) \
-    (f == True) ? "Free" : "Not Free"
+    (f == true) ? "Free" : "Not Free"
 
 static void
 print_page(t_page *p) {

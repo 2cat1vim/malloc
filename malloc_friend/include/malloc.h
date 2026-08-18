@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 
 # define PAGE_SIZE (getpagesize())
 
@@ -16,11 +17,6 @@
 
 # define TINY_BYTES 128
 # define SMALL_BYTES 1280
-
-typedef enum s_bool {
-    False,
-    True
-} t_bool;
 
 typedef enum s_type {
     TINY,
@@ -31,7 +27,8 @@ typedef enum s_type {
 
 typedef struct s_block {
     size_t size;
-    t_bool free;
+    size_t size_max;
+    bool free;
     struct s_block* prev;
     struct s_block* next;
 } t_block;
@@ -40,6 +37,8 @@ typedef struct s_block {
 # define SMALL_MMAP (((SMALL_BYTES) * N_ALLOC + PAGE_SIZE - 1) / PAGE_SIZE * PAGE_SIZE)
 # define LIMIT(type) \
     (type == SMALL) ? (size_t)SMALL_MMAP : (size_t)TINY_MMAP
+# define SIZE_BY_TYPE(type, size) \
+    (type == TINY) ? (size_t)TINY_BYTES : (type == SMALL) ? (size_t)SMALL_BYTES : (size_t)size
 
 typedef struct s_page {
     t_type type;
@@ -56,7 +55,7 @@ void* malloc(size_t size);
 void free(void* ptr);
 void* realloc(void* ptr, size_t size);
 
-t_bool page_has_space(t_page* page, size_t size);
+bool page_has_space(t_page* page, size_t size);
 t_page* search_page_space(size_t size, t_type type);
 t_page* create_page(t_type type, size_t size);
 t_page* lookup_page(size_t size, t_type type);
