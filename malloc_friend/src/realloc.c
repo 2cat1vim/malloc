@@ -3,8 +3,12 @@
 static void*
 realloc_ptr(t_block *b, t_page *p, size_t size) {
     (void)p;
-    /* Size is already enough, return ptr */
+    
     if (b->size >= size) {
+        // todo
+    }
+    if (b->size <= size && b->size_max >= size) {
+        b->size = size;
         char* cast_block_ptr = (char*)b;
         return (cast_block_ptr + sizeof(t_block));
     }

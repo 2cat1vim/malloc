@@ -12,7 +12,7 @@ add_block(t_page *p, size_t size, t_block* last) {
 	else
 		new->prev = NULL;
 	new->next = NULL;
-	p->ptr_end = (void *)p->ptr_end + size; 
+	p->ptr_end = (void *)p->ptr_end + size_max; 
 	return (new);
 }
 
