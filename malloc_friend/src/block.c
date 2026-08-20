@@ -1,8 +1,10 @@
 #include "../include/malloc.h"
 
-t_block*
-add_block(t_page *p, size_t size, t_block* last) {
-	t_block* new = (t_block*)p->ptr_end;
+t_block	*add_block(t_page *p, size_t size, t_block *last)
+{
+	t_block	*new;
+
+	new = (t_block *)p->ptr_end;
 	new->size = ALIGN(size);
 	new->free = false;
 	if (last)
@@ -10,22 +12,27 @@ add_block(t_page *p, size_t size, t_block* last) {
 	else
 		new->prev = NULL;
 	new->next = NULL;
-	p->ptr_end = (void *)p->ptr_end + new->size; 
+	p->ptr_end = (void *)p->ptr_end + new->size;
 	return (new);
 }
 
-t_block*
-select_block(t_page *p, size_t size) {
-	t_block* node = p->blocks;
-	t_block* last = NULL;
+t_block	*select_block(t_page *p, size_t size)
+{
+	t_block	*node;
+	t_block	*last;
+
+	node = p->blocks;
+	last = NULL;
 	p->size += size;
-	while (node) {
+	while (node)
+	{
 		if (node->free == true && size <= node->size)
 			return (node);
 		last = node;
 		node = node->next;
 	}
-	if (last) {
+	if (last)
+	{
 		node = add_block(p, size, last);
 		last->next = node;
 		return (node);
@@ -35,10 +42,11 @@ select_block(t_page *p, size_t size) {
 	return (last);
 }
 
-t_block*
-create_block(size_t size, t_type type) {
-	t_block* b;
-	t_page* p;
+t_block	*create_block(size_t size, t_type type)
+{
+	t_block	*b;
+	t_page	*p;
+
 	p = lookup_page(size, type);
 	if (!p)
 		return (NULL);

@@ -2,9 +2,10 @@
 
 /* NEED GUARDS */
 
-void*
-malloc(size_t size) {
-	t_block* b;
+void	*malloc(size_t size)
+{
+	t_block	*b;
+
 	if (size == 0)
 		return (NULL);
 	if (size + sizeof(t_block) <= TINY_BYTES)
@@ -15,5 +16,5 @@ malloc(size_t size) {
 		b = create_block(size, LARGE);
 	if (!b)
 		return (NULL);
-	return ((void*)b) + sizeof(t_block);
+	return ((void *)b) + sizeof(t_block);
 }
