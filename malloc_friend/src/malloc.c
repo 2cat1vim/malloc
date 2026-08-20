@@ -1,5 +1,7 @@
 #include "../include/malloc.h"
 
+/* NEED GUARDS */
+
 void*
 malloc(size_t size) {
 	t_block* b;
