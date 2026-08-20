@@ -14,9 +14,9 @@ free_ptr(t_block *b, t_page* p) {
 		else
 			page[p->type] = p->next;
 		if (munmap(p, p->size) == -1) {
-			write(STDERR_FILENO, "error: munmap\n", strlen("error: munmap\n"));
-		}
+			write(STDERR_FILENO, "error: munmap\n", strlen("error: munmap\n"));	
 			return (-1);
+		}
 		return (0);
 	}
 	else

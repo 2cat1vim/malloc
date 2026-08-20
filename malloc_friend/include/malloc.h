@@ -27,7 +27,6 @@ typedef enum s_type {
 
 typedef struct s_block {
     size_t size;
-    size_t size_max;
     bool free;
     struct s_block* prev;
     struct s_block* next;
@@ -39,7 +38,8 @@ typedef struct s_block {
     (type == SMALL) ? (size_t)SMALL_MMAP : (size_t)TINY_MMAP
 # define SIZE_BY_TYPE(type, size) \
     (type == TINY) ? (size_t)TINY_BYTES : (type == SMALL) ? (size_t)SMALL_BYTES : (size_t)size
-
+#define ALIGN(size) \
+	(((size) + 7) / 8 * 8)
 typedef struct s_page {
     t_type type;
     size_t size;

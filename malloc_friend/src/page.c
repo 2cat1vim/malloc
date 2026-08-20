@@ -11,8 +11,10 @@ t_page*
 mmap_page(t_page* p, t_type type, size_t size) {
 	t_page *mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
-	if (mp == MAP_FAILED)
+	if (mp == MAP_FAILED) {
+		write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
 		return (NULL);
+	}
 	mp->type = type;
 	mp->ptr_end = (void *)mp + sizeof(t_page);
 	mp->size = sizeof(t_page);
@@ -24,8 +26,10 @@ mmap_page(t_page* p, t_type type, size_t size) {
 size_t
 get_map_size(t_type type, size_t size) {
 	size_t map_size = 0;
-	if (type == LARGE)
+	if (type == LARGE) {
 		map_size = size + sizeof(t_page) + sizeof(t_block);
+		return (map_size);
+	}
 	map_size = LIMIT(type);
 	return (map_size);
 }
@@ -36,6 +40,8 @@ create_page(t_type type, size_t size) {
 	size_t map_size = get_map_size(type, size);
 	if (!head) {
 		head = mmap_page(head, type, map_size);
+		if (!head)
+			return (NULL);
 		page[type] = head;
 		return (head);
 	}
@@ -45,6 +51,8 @@ create_page(t_type type, size_t size) {
 		head = head->next;
 	}
 	head = mmap_page(head, type, map_size);
+	if (!head)
+		return (NULL);
 	head->prev = last;
 	last->next = head;
 	return (head);

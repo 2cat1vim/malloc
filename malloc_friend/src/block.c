@@ -3,16 +3,14 @@
 t_block*
 add_block(t_page *p, size_t size, t_block* last) {
 	t_block* new = (t_block*)p->ptr_end;
-	size_t max_block_size = SIZE_BY_TYPE(p->type, size);
-	new->size = size;
-	new->size_max = max_block_size;
+	new->size = ALIGN(size);
 	new->free = false;
 	if (last)
 		new->prev = last;
 	else
 		new->prev = NULL;
 	new->next = NULL;
-	p->ptr_end = (void *)p->ptr_end + new->size_max; 
+	p->ptr_end = (void *)p->ptr_end + new->size; 
 	return (new);
 }
 
@@ -22,7 +20,7 @@ select_block(t_page *p, size_t size) {
 	t_block* last = NULL;
 	p->size += size;
 	while (node) {
-		if (node->free == true)
+		if (node->free == true && size <= node->size)
 			return (node);
 		last = node;
 		node = node->next;

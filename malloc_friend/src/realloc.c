@@ -10,7 +10,7 @@ realloc_ptr(t_block *b, t_page *p, size_t size) {
 		return (NULL);
 	}
 	char* cast_block_ptr = (char*)b;
-	if ((b->size >= size || b->size <= size) && b->size_max >= size) {
+	if (b->size <= size) {
 		b->size = size;
         	return (cast_block_ptr + sizeof(t_block));
     	}
