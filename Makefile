@@ -2,8 +2,11 @@ MAKEFLAGS += -s
 NAME = malloc_test
 CC = clang
 CFLAGS = -g -Wall -Wextra -Werror
-LIBDIR = malloc_friend/
-LIBNAME = malloc.a
+
+LIBDIR = malloc_friend
+LIBNAME = libft_malloc.so
+LIBPATH = $(LIBDIR)/$(LIBNAME)
+
 SRC = main.c
 OBJS = $(SRC:.c=.o)
 
@@ -11,13 +14,13 @@ all: $(NAME)
 	echo "[MAKEFILE]: Compiling Tester"
 	@test -n "$(SILENT_END)" || echo "[MAKEFILE]: Task completed"
 
-$(NAME): $(OBJS) $(LIBDIR)/$(LIBNAME)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBDIR) -l:$(LIBNAME)
+$(NAME): $(OBJS) $(LIBPATH)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBDIR) -lft_malloc
 
-$(LIBDIR)/$(LIBNAME):
+$(LIBPATH):
 	$(MAKE) -C $(LIBDIR) -f Makefile
 
-clean:	
+clean:    
 	echo "[MAKEFILE]: Cleaning Tester"
 	rm -f $(OBJS)
 	$(MAKE) -C $(LIBDIR) -f Makefile clean

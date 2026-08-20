@@ -21,8 +21,8 @@ static void	*realloc_ptr(t_block *b, t_page *p, size_t size)
 	}
 	else
 	{
-		free(cast_block_ptr);
-		return (malloc(size));
+		free(cast_block_ptr + sizeof(t_block));
+		return (malloc(size - sizeof(t_block)));
 	}
 	// handle tiny large small
 }
@@ -31,8 +31,6 @@ void	*realloc(void *ptr, size_t size)
 {
 	char	*cast_ptr_block;
 	char	*cast_ptr_page;
-	void	*res_ptr;
-
 	/* PTR is NULL, act like its a call to malloc */
 	if (!ptr)
 		return (malloc(size));
@@ -47,7 +45,5 @@ void	*realloc(void *ptr, size_t size)
 	cast_ptr_block = ptr;
 	cast_ptr_block -= sizeof(t_block);
 	cast_ptr_page = cast_ptr_block - sizeof(t_page);
-	res_ptr = realloc_ptr((t_block *)cast_ptr_block, (t_page *)cast_ptr_page,
-			size);
-	return (res_ptr);
+	return (realloc_ptr((t_block *)cast_ptr_block, (t_page *)cast_ptr_page, size + sizeof(t_block)));
 }
