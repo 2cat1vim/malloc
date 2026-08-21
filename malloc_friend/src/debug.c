@@ -2,7 +2,9 @@
 
 #define SELECT_TYPE(n) (n == 0) ? "TINY" : (n == 1) ? "SMALL" : "LARGE"
 #define IS_FREE(f) (f == true) ? "Free" : "Not Free"
-
+#define PTR(op) (op == 0) ? b : b + sizeof(t_block)
+#define SIZE(op) (op == 0) ? b->size - sizeof(t_block) : b->size
+#define WHERE_AM_I(op) (op == 0) ? "PTR INFOS : " : "BLOCK + PTR INFOS : "
 static void	print_page(t_page *p)
 {
 	t_type	n;
@@ -14,15 +16,16 @@ static void	print_page(t_page *p)
 	pout("\n");
 }
 
-static void	print_block(t_block *b)
+static void	print_block(t_block *b, int op)
 {
-	print_hex(b);
+	pout(WHERE_AM_I(op));
+	print_hex(PTR(op));
 	pout(" - ");
 	print_hex(b + b->size);
 	pout(" : ");
 	pout(IS_FREE(b->free));
 	pout(" : ");
-	print_nbr(b->size);
+	print_nbr(SIZE(op));
 	pouts(" bytes");
 }
 
@@ -42,7 +45,8 @@ void	show_alloc_mem(void)
 			h_b = h_p->blocks;
 			while (h_b)
 			{
-				print_block(h_b);
+				print_block(h_b, 0);
+				print_block(h_b, 1);
 				total += h_b->size;
 				h_b = h_b->next;
 			}
