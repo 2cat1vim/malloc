@@ -2,41 +2,38 @@
 
 /* NEED GUARDS */
 
-static void	*realloc_ptr(t_block *b, t_page *p, size_t size)
+static void*
+realloc_ptr(t_block *b, size_t size)
 {
-	char	*cast_block_ptr;
+	char* cast_block_ptr;
 
-	(void)p;
-	if (b->free == true)
-	{
+	if (b->free == true) {
 		write(STDERR_FILENO, "error: cannot realloc a freed ptr\n",
 			strlen("error: cannot realloc a freed ptr\n"));
 		return (NULL);
 	}
-	cast_block_ptr = (char *)b;
-	if (size <= b->size)
-	{
+	cast_block_ptr = (char*)b;
+	if (size <= b->size) {
 		b->size = size;
 		return (cast_block_ptr + sizeof(t_block));
 	}
-	else
-	{
+	else {
 		free(cast_block_ptr + sizeof(t_block));
 		return (malloc(size - sizeof(t_block)));
 	}
 	// handle tiny large small
 }
 
-void	*realloc(void *ptr, size_t size)
+void*
+realloc(void* ptr, size_t size)
 {
-	char	*cast_ptr_block;
-	char	*cast_ptr_page;
+	char* cast_ptr_block;
 	/* PTR is NULL, act like its a call to malloc */
-	if (!ptr)
+	if (!ptr) {
 		return (malloc(size));
+	}
 	/* Size is empty, act like its a call to free */
-	if (size == 0)
-	{
+	if (size == 0) {
 		free(ptr);
 		return (NULL);
 	}
@@ -44,6 +41,5 @@ void	*realloc(void *ptr, size_t size)
 			to get the position of the block/page */
 	cast_ptr_block = ptr;
 	cast_ptr_block -= sizeof(t_block);
-	cast_ptr_page = cast_ptr_block - sizeof(t_page);
-	return (realloc_ptr((t_block *)cast_ptr_block, (t_page *)cast_ptr_page, size + sizeof(t_block)));
+	return (realloc_ptr((t_block*)cast_ptr_block, (size + sizeof(t_block))));
 }

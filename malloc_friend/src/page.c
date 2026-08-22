@@ -1,36 +1,33 @@
 #include "../include/malloc.h"
 
-t_page	*page[TYPE_SIZE] = {NULL, NULL, NULL};
+t_page* page[TYPE_SIZE] = {NULL, NULL, NULL};
 
-#define RW PROT_READ | PROT_WRITE
-#define PA MAP_PRIVATE | MAP_ANONYMOUS
-
-t_page	*mmap_page(t_page *p, t_type type, size_t size)
+t_page*
+mmap_page(t_page* p, t_type type, size_t size)
 {
-	t_page	*mp;
+	t_page* mp;
 
 	mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
-	if (mp == MAP_FAILED)
-	{
+	if (mp == MAP_FAILED) {
 		write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
 		return (NULL);
 	}
 	mp->type = type;
-	mp->ptr_end = (void *)mp + sizeof(t_page);
+	mp->ptr_end = (void*)mp + sizeof(t_page);
 	mp->size = sizeof(t_page);
 	mp->blocks = NULL;
 	mp->next = NULL;
 	return (mp);
 }
 
-size_t	get_map_size(t_type type, size_t size)
+size_t
+get_map_size(t_type type, size_t size)
 {
-	size_t	map_size;
+	size_t map_size;
 
 	map_size = 0;
-	if (type == LARGE)
-	{
+	if (type == LARGE) {
 		map_size = size + sizeof(t_page) + sizeof(t_block);
 		return (map_size);
 	}
@@ -38,72 +35,78 @@ size_t	get_map_size(t_type type, size_t size)
 	return (map_size);
 }
 
-t_page	*create_page(t_type type, size_t size)
+t_page*
+create_page(t_type type, size_t size)
 {
-	t_page	*head;
-	size_t	map_size;
-	t_page	*last;
+	t_page* head;
+	t_page* last;
+	size_t map_size;
 
 	head = page[type];
 	map_size = get_map_size(type, size);
-	if (!head)
-	{
+	if (!head) {
 		head = mmap_page(head, type, map_size);
-		if (!head)
+		if (!head) {
 			return (NULL);
+		}
 		page[type] = head;
 		return (head);
 	}
 	last = NULL;
-	while (head)
-	{
+	while (head) {
 		last = head;
 		head = head->next;
 	}
 	head = mmap_page(head, type, map_size);
-	if (!head)
+	if (!head) {
 		return (NULL);
+	}
 	head->prev = last;
 	last->next = head;
 	return (head);
 }
 
-t_page	*search_page_space(size_t size, t_type type)
+t_page
+*search_page_space(size_t size, t_type type)
 {
-	t_page	*p;
+	t_page* p;
 
 	p = page[type];
-	while (p)
-	{
-		if (page_has_space(p, size) == true)
+	while (p) {
+		if (page_has_space(p, size) == true) {
 			return (p);
+		}
 		p = p->next;
 	}
 	return (NULL);
 }
 
-t_page	*lookup_page(size_t size, t_type type)
+t_page*
+lookup_page(size_t size, t_type type)
 {
-	t_page	*p;
+	t_page* p;
 
 	p = search_page_space(size + sizeof(t_block), type);
-	if (!p)
-	{
+	if (!p) {
 		p = create_page(type, size);
-		if (!p)
+		if (!p) {
 			return (NULL);
+		}
 	}
 	return (p);
 }
 
-bool	page_has_space(t_page *page, size_t size)
+bool
+page_has_space(t_page* page, size_t size)
 {
-	size_t	limit;
+	size_t limit;
 
-	if (page->type == LARGE)
+	if (page->type == LARGE) {
 		return (false);
+	}
 	limit = LIMIT(page->type);
-	if (page->size + size <= limit)
+	if (page->size + size <= limit) {
 		return (true);
+	}
 	return (false);
 }

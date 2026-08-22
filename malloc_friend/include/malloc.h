@@ -56,5 +56,4 @@ void print_nbr(size_t n);
 void pout(const char* s);
 void pouts(const char* s);
 
-void show_alloc_mem(void);
 # endif
