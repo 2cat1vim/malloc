@@ -18,11 +18,13 @@ main(void) {
 	puts(line);
 	char* rlol = realloc(lol, 55);
 	char* rlol2 = realloc(lol2, 12);
+	(void)rlol2;
 	show_alloc_mem();
 	puts(line);
-	char* rlol3 = realloc(rlol2, 111322);
-	char* rlol4 = realloc(rlol3, 100000000);
-	(void)rlol4;
+	char* rlol3 = realloc(rlol, 111322);
+	show_alloc_mem();
+	char* rlol5 = realloc(rlol3, 20);
+	(void)rlol5;
 	show_alloc_mem();
 	puts(line);
 	(void)rlol3;

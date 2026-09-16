@@ -2,30 +2,20 @@
 
 t_share* share = NULL;
 
-size_t
-init_share() {
-	if (!share) {
-		share = mmap(NULL, sizeof(t_share), RW, PA, -1, 0);
-		if (share == MAP_FAILED) {
-			write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
-			return (-1);
-		}
-		for (size_t i = 0; i < 3; i++) {
-			share->page[i] = NULL;
-		}
-		share->size = PAGE_SIZE;
-		if (getrlimit(RLIMIT_AS, &share->rlim) == -1) {
-			write(STDERR_FILENO, "error: rlimit\n", strlen("error: rlimit\n"));
-			return (-1);
-		}
-	}
-	return (0);
-}
-
 t_page*
 mmap_page(t_page* p, t_type type, size_t size)
 {
 	t_page* mp = NULL;
+
+	if (getrlimit(RLIMIT_AS, &share->rlim) == -1) {
+		write(STDERR_FILENO, "error: getrlimit\n", strlen("error: getrlimit\n"));
+	}
+	if (size > share->rlim.rlim_cur) {
+		epout("error: map size is greater than limit (");
+		print_nbr(size);
+		epouts(")");
+		return (NULL);	
+	}
 
 	mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
@@ -33,9 +23,9 @@ mmap_page(t_page* p, t_type type, size_t size)
 		write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
 		return (NULL);
 	}
+
 	mp->type = type;
 	mp->ptr_end = (void*)mp + sizeof(t_page);
-	mp->size = sizeof(t_page);
 	mp->blocks = NULL;
 	mp->next = NULL;
 	return (mp);
@@ -86,13 +76,31 @@ create_page(t_type type, size_t size)
 	return (head);
 }
 
+bool
+create_share() {
+	if (!share) {
+		share = mmap(NULL, sizeof(t_share), RW, PA, -1, 0);
+		if (share == MAP_FAILED) {
+			write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
+			write(1, "here\n", strlen("here\n"));
+			return (false);
+		}
+		for (size_t i = 0; i < 3; i++) {
+			share->page[i] = NULL;
+		}
+	}
+	return (true);
+}
+
 t_page
 *search_page_space(size_t size, t_type type)
 {
 	t_page* p;
 
 	if (!share) {
-		init_share();
+		if (!create_share()) {
+			return (NULL);
+		}
 	}
 	p = share->page[type];
 	while (p) {

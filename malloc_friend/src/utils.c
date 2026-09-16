@@ -17,6 +17,22 @@ pouts(const char* s)
 }
 
 void
+epout(const char* s)
+{
+	if (!s) {
+		return ;
+	}
+	write(2, s, strlen(s));
+}
+
+void
+epouts(const char* s)
+{
+	pout(s);
+	write(2, "\n", 1);
+}
+
+void
 print_hex(void* p)
 {
 	unsigned long addr;

@@ -14,7 +14,7 @@ SRC = src/malloc.c \
       src/debug.c \
       src/free.c \
       src/realloc.c \
-      src/utils.c
+      src/utils.c 
 
 OBJS = $(SRC:.c=.o)
 

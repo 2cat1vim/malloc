@@ -10,17 +10,6 @@ malloc(size_t size)
 	if (size == 0) {
 		return (NULL);
 	}
-
-	// NEED TO PROPAGATE share->size ( increment where it need to );
-	if (share) {
-		if ((long)share->rlim.rlim_cur != (long)RLIM_INFINITY) {
-			if ((long)(share->size + size) >= (long)share->rlim.rlim_cur) {
-				write(STDERR_FILENO, "error: rlimit: soft limit hit\n", strlen("error: rlimit: soft limit hit\n"));
-				return (NULL);
-			}
-		}
-	}
-
 	if (size + sizeof(t_block) <= TINY_BYTES) {
 		b = create_block(size, TINY);
 	}

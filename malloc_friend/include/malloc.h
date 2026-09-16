@@ -38,7 +38,6 @@ typedef struct s_page {
 typedef struct s_share {
     t_page *page[TYPE_SIZE];
     struct rlimit rlim;
-    long size;
 } t_share;
 
 extern t_share* share;
@@ -61,5 +60,8 @@ void print_hex(void *p);
 void print_nbr(size_t n);
 void pout(const char* s);
 void pouts(const char* s);
+void epout(const char* s);
+void epouts(const char* s);
 
+bool has_memory(size_t size);
 # endif

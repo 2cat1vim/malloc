@@ -30,6 +30,7 @@ select_block(t_page* p, size_t size)
 	p->size += size;
 	while (node) {
 		if (node->free == true && size <= node->size) {
+			node->size = size;
 			return (node);
 		}
 		last = node;
