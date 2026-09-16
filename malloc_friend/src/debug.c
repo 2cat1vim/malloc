@@ -56,6 +56,4 @@ void	show_alloc_mem(void)
 	pout("Total : ");
 	print_nbr(total);
 	pouts(" bytes");
-	printf("rlimcur: %ld\n", (long)share->rlim->rlim_cur);
-	printf("rlimmax: %ld\n", (long)share->rlim->rlim_max);
 }

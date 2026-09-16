@@ -37,7 +37,7 @@ typedef struct s_page {
 
 typedef struct s_share {
     t_page *page[TYPE_SIZE];
-    struct rlimit *rlim;
+    struct rlimit rlim;
     long size;
 } t_share;
 

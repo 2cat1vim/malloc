@@ -5,17 +5,16 @@ t_share* share = NULL;
 size_t
 init_share() {
 	if (!share) {
-		share = mmap(NULL, PAGE_SIZE, RW, PA, -1, 0);
-		for (size_t i = 0; i < 3; i++) {
-			share->page[i] = NULL;
-			share->size = PAGE_SIZE;
-			share->rlim = NULL;
-		}
+		share = mmap(NULL, sizeof(t_share), RW, PA, -1, 0);
 		if (share == MAP_FAILED) {
 			write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
 			return (-1);
 		}
-		if (getrlimit(RLIMIT_AS, share->rlim) == -1) {
+		for (size_t i = 0; i < 3; i++) {
+			share->page[i] = NULL;
+		}
+		share->size = PAGE_SIZE;
+		if (getrlimit(RLIMIT_AS, &share->rlim) == -1) {
 			write(STDERR_FILENO, "error: rlimit\n", strlen("error: rlimit\n"));
 			return (-1);
 		}
@@ -39,8 +38,6 @@ mmap_page(t_page* p, t_type type, size_t size)
 	mp->size = sizeof(t_page);
 	mp->blocks = NULL;
 	mp->next = NULL;
-
-	share->size += mp->size; 
 	return (mp);
 }
 
