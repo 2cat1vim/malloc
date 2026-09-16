@@ -3,9 +3,9 @@
 
 #include <sys/mman.h>
 #include <sys/resource.h>
+#include <sys/time.h>
 #include <stdint.h>
 #include <stddef.h>
-#include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -35,7 +35,13 @@ typedef struct s_page {
     struct s_page *next;
 } t_page;
 
-extern t_page* page[TYPE_SIZE];
+typedef struct s_share {
+    t_page *page[TYPE_SIZE];
+    struct rlimit *rlim;
+    long size;
+} t_share;
+
+extern t_share* share;
 
 void* malloc(size_t size);
 void free(void* ptr);

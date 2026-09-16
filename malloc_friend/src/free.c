@@ -1,7 +1,5 @@
 #include "../include/malloc.h"
 
-/* NEED GUARDS */
-
 static int
 free_ptr(t_block* b, t_page* p)
 {
@@ -14,7 +12,7 @@ free_ptr(t_block* b, t_page* p)
 		if (p->prev)
 			p->prev->next = p->next;
 		else
-			page[p->type] = p->next;
+			share->page[p->type] = p->next;
 		if (munmap(p, p->size) == -1) {
 			write(STDERR_FILENO, "error: munmap\n", strlen("error: munmap\n"));
 			return (-1);

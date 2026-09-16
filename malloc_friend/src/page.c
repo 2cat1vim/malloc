@@ -1,11 +1,32 @@
 #include "../include/malloc.h"
 
-t_page* page[TYPE_SIZE] = {NULL, NULL, NULL};
+t_share* share = NULL;
+
+size_t
+init_share() {
+	if (!share) {
+		share = mmap(NULL, PAGE_SIZE, RW, PA, -1, 0);
+		for (size_t i = 0; i < 3; i++) {
+			share->page[i] = NULL;
+			share->size = PAGE_SIZE;
+			share->rlim = NULL;
+		}
+		if (share == MAP_FAILED) {
+			write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
+			return (-1);
+		}
+		if (getrlimit(RLIMIT_AS, share->rlim) == -1) {
+			write(STDERR_FILENO, "error: rlimit\n", strlen("error: rlimit\n"));
+			return (-1);
+		}
+	}
+	return (0);
+}
 
 t_page*
 mmap_page(t_page* p, t_type type, size_t size)
 {
-	t_page* mp;
+	t_page* mp = NULL;
 
 	mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
@@ -18,6 +39,8 @@ mmap_page(t_page* p, t_type type, size_t size)
 	mp->size = sizeof(t_page);
 	mp->blocks = NULL;
 	mp->next = NULL;
+
+	share->size += mp->size; 
 	return (mp);
 }
 
@@ -42,14 +65,14 @@ create_page(t_type type, size_t size)
 	t_page* last;
 	size_t map_size;
 
-	head = page[type];
+	head = share->page[type];
 	map_size = get_map_size(type, size);
 	if (!head) {
 		head = mmap_page(head, type, map_size);
 		if (!head) {
 			return (NULL);
 		}
-		page[type] = head;
+		share->page[type] = head;
 		return (head);
 	}
 	last = NULL;
@@ -71,7 +94,10 @@ t_page
 {
 	t_page* p;
 
-	p = page[type];
+	if (!share) {
+		init_share();
+	}
+	p = share->page[type];
 	while (p) {
 		if (page_has_space(p, size) == true) {
 			return (p);

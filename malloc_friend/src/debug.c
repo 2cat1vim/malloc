@@ -36,7 +36,7 @@ void	show_alloc_mem(void)
 	total = 0;
 	for (size_t i = 0; i < TYPE_SIZE; i++)
 	{
-		h_p = page[i];
+		h_p = share->page[i];
 		while (h_p)
 		{
 			int pos = 0;
@@ -56,4 +56,6 @@ void	show_alloc_mem(void)
 	pout("Total : ");
 	print_nbr(total);
 	pouts(" bytes");
+	printf("rlimcur: %ld\n", (long)share->rlim->rlim_cur);
+	printf("rlimmax: %ld\n", (long)share->rlim->rlim_max);
 }
