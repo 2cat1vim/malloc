@@ -1,41 +1,41 @@
-MAKEFLAGS += -s
-NAME = malloc_test
-CC = clang
-CFLAGS = -g -Wall -Wextra -Werror
+ifeq ($(HOSTTYPE),)
+HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
 
-LIBDIR = malloc_friend
-LIBNAME = libft_malloc.so
-LIBPATH = $(LIBDIR)/$(LIBNAME)
+NAME = libft_malloc_$(HOSTTYPE).so
+LINK_NAME = libft_malloc.so
 
-SRC = main.c
+CC = gcc
+CFLAGS = -g -Wall -Wextra -Werror -fPIC
+
+SRC = src/malloc.c \
+      src/page.c \
+      src/block.c \
+      src/show_alloc_mem.c \
+      src/free.c \
+      src/realloc.c \
+      src/utils.c 
+
 OBJS = $(SRC:.c=.o)
 
+
 all: $(NAME)
-	echo "[MAKEFILE]: Compiling Tester"
-	@test -n "$(SILENT_END)" || echo "[MAKEFILE]: Task completed"
 
-$(NAME): $(OBJS) $(LIBPATH)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBDIR) -lft_malloc
+$(NAME): $(OBJS)
+	$(CC) -shared -o $(NAME) $(OBJS) $(LIBFT)
+	@rm -f $(LINK_NAME)
+	@ln -s $(NAME) $(LINK_NAME)
 
-$(LIBPATH):
-	$(MAKE) -C $(LIBDIR) -f Makefile
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:    
-	echo "[MAKEFILE]: Cleaning Tester"
+clean:
 	rm -f $(OBJS)
-	$(MAKE) -C $(LIBDIR) -f Makefile clean
-	@test -n "$(SILENT_END)" || echo "[MAKEFILE]: Task completed"
 
-fclean:
-	echo "[MAKEFILE]: Cleaning Tester"
-	rm -f $(OBJS)
-	$(MAKE) -C $(LIBDIR) -f Makefile clean
+fclean: clean
 	rm -f $(NAME)
-	$(MAKE) -C $(LIBDIR) -f Makefile fclean
-	@test -n "$(SILENT_END)" || echo "[MAKEFILE]: Task completed"
+	find . -name '*.so' -delete
 
-re:
-	$(MAKE) fclean SILENT_END=1
-	$(MAKE) all
+re: fclean all
 
 .PHONY: all clean fclean re

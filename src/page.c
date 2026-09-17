@@ -8,7 +8,7 @@ mmap_page(t_page* p, t_type type, size_t size)
 	t_page* mp = NULL;
 
 	if (getrlimit(RLIMIT_AS, &share->rlim) == -1) {
-		write(STDERR_FILENO, "error: getrlimit\n", strlen("error: getrlimit\n"));
+		epouts("error: getrlimit failed\n");
 	}
 	if (size > share->rlim.rlim_cur) {
 		epout("error: map size is greater than limit (");
@@ -20,7 +20,7 @@ mmap_page(t_page* p, t_type type, size_t size)
 	mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
 	if (mp == MAP_FAILED) {
-		write(STDERR_FILENO, "error: mmap failed\n", strlen("error: mmap failed\n"));
+		epouts("error: mmap failed");
 		return (NULL);
 	}
 
@@ -81,8 +81,7 @@ create_share() {
 	if (!share) {
 		share = mmap(NULL, sizeof(t_share), RW, PA, -1, 0);
 		if (share == MAP_FAILED) {
-			write(STDERR_FILENO, "error: mmap failed\n", strlen("error: mmap failed\n"));
-			write(1, "here\n", strlen("here\n"));
+			epouts("error: mmap failed");
 			return (false);
 		}
 		for (size_t i = 0; i < 3; i++) {

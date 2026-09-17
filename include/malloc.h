@@ -62,6 +62,6 @@ void pout(const char* s);
 void pouts(const char* s);
 void epout(const char* s);
 void epouts(const char* s);
+size_t len(const char *s);
 
-bool has_memory(size_t size);
 # endif

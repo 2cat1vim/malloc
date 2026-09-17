@@ -6,6 +6,7 @@ void*
 malloc(size_t size)
 {
 	t_block	*b;
+	pouts("hello");
 
 	if (size == 0) {
 		return (NULL);

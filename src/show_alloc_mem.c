@@ -1,6 +1,7 @@
 #include "../include/malloc.h"
 
-static void	print_page(t_page *p)
+static void
+print_page(t_page *p)
 {
 	t_type	n;
 
@@ -11,7 +12,8 @@ static void	print_page(t_page *p)
 	pout(RST "\n");
 }
 
-static void	print_block(t_block *b, int op, int pos)
+static void
+print_block(t_block *b, int op, int pos)
 {
 	pout(MAG "ALLOC[" RST );
 	print_nbr(pos);
@@ -27,7 +29,8 @@ static void	print_block(t_block *b, int op, int pos)
 	pouts(" bytes");
 }
 
-void	show_alloc_mem(void)
+void
+show_alloc_mem(void)
 {
 	t_page	*h_p;
 	size_t	total;

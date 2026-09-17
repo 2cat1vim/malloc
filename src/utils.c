@@ -1,12 +1,21 @@
 #include "../include/malloc.h"
 
+size_t
+len(const char *str) {
+	size_t i = 0;
+	while (str[i]) {
+		i++;
+	}
+	return (i);
+}
+
 void
 pout(const char* s)
 {
 	if (!s) {
 		return ;
 	}
-	write(1, s, strlen(s));
+	write(1, s, len(s));
 }
 
 void
@@ -22,7 +31,7 @@ epout(const char* s)
 	if (!s) {
 		return ;
 	}
-	write(2, s, strlen(s));
+	write(2, s, len(s));
 }
 
 void
