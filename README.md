@@ -63,9 +63,10 @@ make re     # fclean + all
 `ft_malloc` is meant to be loaded in place of the system allocator via `LD_PRELOAD`:
 
 ```sh
+run.sh:
 export LD_LIBRARY_PATH=$(pwd)
 export LD_PRELOAD=libft_malloc.so
-./your_program
+./run.sh ./your_program
 ```
 
 Any binary run this way will have its `malloc`, `free` and `realloc` calls routed through this library instead of glibc's.
