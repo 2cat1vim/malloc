@@ -6,6 +6,7 @@ static void*
 realloc_ptr(t_block *b, size_t size)
 {
 	char* cast_block_ptr;
+	void *newptr;
 
 	if (b->free == true) {
 		epout("error: cannot realloc a freed ptr (");
@@ -19,9 +20,14 @@ realloc_ptr(t_block *b, size_t size)
 		return (cast_block_ptr + sizeof(t_block));
 	}
 	else {
+		newptr = malloc(size);
+		if (!newptr) {
+			return (NULL);
+		}
+		ft_memcpy((char*)newptr, (char*)cast_block_ptr + sizeof(t_block), b->size);
 		free(cast_block_ptr + sizeof(t_block));
-		return (malloc(size - sizeof(t_block)));
 	}
+	return (NULL);
 }
 
 void*
@@ -44,8 +50,13 @@ realloc(void* ptr, size_t size)
 	page = (t_page*)(cast_ptr_block - sizeof(t_page));
 
 	if ((page->type == LARGE) && (size < (size_t)SMALL_MMAP)) {
+		void *newptr = malloc(size);
+		if (!newptr) {
+			return (NULL);
+		}
+		ft_memcpy((char*)newptr, (char*)ptr, size);
 		free(ptr);
-		return (malloc(size));
+		return (newptr);
 	}
 	
 	return (realloc_ptr((t_block*)cast_ptr_block, (size + sizeof(t_block))));

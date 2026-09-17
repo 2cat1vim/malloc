@@ -9,6 +9,24 @@ len(const char *str) {
 	return (i);
 }
 
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t	i;
+
+	if (!dest && !src && n > 0)
+	{
+		return (NULL);
+	}
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
+		i++;
+	}
+	return (dest);
+}
+
 void
 pout(const char* s)
 {
@@ -45,8 +63,8 @@ void
 print_hex(void* p)
 {
 	unsigned long addr;
-	char base[16] = "0123456789ABCDEF";
-	char buffer[16];
+	char base[17] = "0123456789ABCDEF";
+	char buffer[17];
 	int i;
 
 	addr = (unsigned long)p;

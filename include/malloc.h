@@ -63,5 +63,6 @@ void pouts(const char* s);
 void epout(const char* s);
 void epouts(const char* s);
 size_t len(const char *s);
+void *ft_memcpy(void *dest, const void *src, size_t n);
 
 # endif

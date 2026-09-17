@@ -1,5 +1,7 @@
 #include "malloc.h"
 
+void show_alloc_mem(void);
+
 int main(void) {
 	char *a = malloc(10);
 	a[0] = 'a';

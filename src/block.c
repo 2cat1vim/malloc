@@ -6,7 +6,7 @@ add_block(t_page* p, size_t size, t_block* last)
 	t_block* new;
 
 	new = (t_block*)p->ptr_end;
-	new->size = ALIGN(size);
+	new->size = size;
 	new->free = false;
 	if (last) {
 		new->prev = last;
@@ -25,9 +25,9 @@ select_block(t_page* p, size_t size)
 	t_block* node;
 	t_block* last;
 
+	size = ALIGN(size);
 	node = p->blocks;
 	last = NULL;
-	p->size += size;
 	while (node) {
 		if (node->free == true && size <= node->size) {
 			node->size = size;

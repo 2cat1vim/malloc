@@ -29,39 +29,34 @@ free_ptr(t_block* b, t_page* p)
 	return (0);
 }
 
-bool
-ptr_exist(t_page *page) {
-	for (size_t i = 0; i < 3; i++) {
-		t_page* head = share->page[i];
-		while (head) {
-			if (head == page)
-				return (true);
-			head = head->next;
-		}
-	}
-	return (false);
+t_page* find_page_for_ptr(void *ptr) {
+    for (size_t i = 0; i < 3; i++) {
+        t_page* head = share->page[i];
+        while (head) {
+            char *page_start = (char*)head;
+            char *page_end = head->ptr_end;
+            
+            if ((char*)ptr >= page_start && (char*)ptr < page_end) {
+                return head;
+            }
+            head = head->next;
+        }
+    }
+    return NULL;
 }
 
 void
 free(void* ptr)
 {
-	char* cast_ptr_block;
-	char* cast_ptr_page;
+	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
+	t_page* page = find_page_for_ptr(ptr);
 
-	if (!ptr) {
+	if (!page) {
 		epouts("error: invalid ptr");
-		return ;
+		return;
 	}
 
-	cast_ptr_block = (char*)ptr - sizeof(t_block);
-	cast_ptr_page = cast_ptr_block - (sizeof(t_page));
-
-	if (!ptr_exist((t_page*)cast_ptr_page)) {
-		epouts("error: invalid ptr");
-		return ;
-	}
-
-	if (free_ptr((t_block *)cast_ptr_block, (t_page *)cast_ptr_page) == -1) {
+	if (free_ptr((t_block *)cast_ptr_block, page) == -1) {
 		return ;
 	}
 }
