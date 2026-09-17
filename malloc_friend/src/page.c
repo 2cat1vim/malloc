@@ -20,7 +20,7 @@ mmap_page(t_page* p, t_type type, size_t size)
 	mp = p;
 	mp = mmap(NULL, size, RW, PA, -1, 0);
 	if (mp == MAP_FAILED) {
-		write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
+		write(STDERR_FILENO, "error: mmap failed\n", strlen("error: mmap failed\n"));
 		return (NULL);
 	}
 
@@ -81,7 +81,7 @@ create_share() {
 	if (!share) {
 		share = mmap(NULL, sizeof(t_share), RW, PA, -1, 0);
 		if (share == MAP_FAILED) {
-			write(STDERR_FILENO, "error: mmap\n", strlen("error: mmap\n"));
+			write(STDERR_FILENO, "error: mmap failed\n", strlen("error: mmap failed\n"));
 			write(1, "here\n", strlen("here\n"));
 			return (false);
 		}

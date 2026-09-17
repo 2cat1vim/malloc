@@ -4,17 +4,21 @@ static int
 free_ptr(t_block* b, t_page* p)
 {
 	if (b->free == true) {
-		write(STDERR_FILENO, "error: ptr already freed\n",
-			strlen("error: ptr already freed\n"));
+		epout("error: This region is set to FREE, you cannot free it again (");
+		print_hex((char*)b);
+		epouts(")");
 		return (-1);
 	}
-	if (p->type == LARGE) {
-		if (p->prev)
+	else if (p->type == LARGE) {
+		if (p->prev) {
 			p->prev->next = p->next;
-		else
+		}
+		else {
 			share->page[p->type] = p->next;
+		}
+
 		if (munmap(p, p->size) == -1) {
-			write(STDERR_FILENO, "error: munmap\n", strlen("error: munmap\n"));
+			epouts("error: munmap failed");
 			return (-1);
 		}
 		return (0);
@@ -25,6 +29,19 @@ free_ptr(t_block* b, t_page* p)
 	return (0);
 }
 
+bool
+ptr_exist(t_page *page) {
+	for (size_t i = 0; i < 3; i++) {
+		t_page* head = share->page[i];
+		while (head) {
+			if (head == page)
+				return (true);
+			head = head->next;
+		}
+	}
+	return (false);
+}
+
 void
 free(void* ptr)
 {
@@ -32,15 +49,18 @@ free(void* ptr)
 	char* cast_ptr_page;
 
 	if (!ptr) {
+		epouts("error: invalid ptr");
 		return ;
 	}
-	/* Cast ptr and minus it by sizeof(t_block/t_page)
-			to get the position of the block/page */
-	cast_ptr_block = ptr;
-	cast_ptr_block -= sizeof(t_block);
+
+	cast_ptr_block = (char*)ptr - sizeof(t_block);
 	cast_ptr_page = cast_ptr_block - (sizeof(t_page));
-	// NEED TO CHECK
-	/* Check that the block is existing and then free it */
+
+	if (!ptr_exist((t_page*)cast_ptr_page)) {
+		epouts("error: invalid ptr");
+		return ;
+	}
+
 	if (free_ptr((t_block *)cast_ptr_block, (t_page *)cast_ptr_page) == -1) {
 		return ;
 	}

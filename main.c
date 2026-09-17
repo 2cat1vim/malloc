@@ -14,6 +14,7 @@ main(void) {
 	puts(line);
 	free(lol);
 	free(xd);
+	free(xd);
 	show_alloc_mem();
 	puts(line);
 	char* rlol = realloc(lol, 55);
@@ -25,6 +26,9 @@ main(void) {
 	show_alloc_mem();
 	char* rlol5 = realloc(rlol3, 20);
 	(void)rlol5;
+	show_alloc_mem();
+	free(rlol5);
+	free(rlol2);
 	show_alloc_mem();
 	puts(line);
 	(void)rlol3;
