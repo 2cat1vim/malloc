@@ -25,7 +25,6 @@ select_block(t_page* p, size_t size)
 	t_block* node;
 	t_block* last;
 
-	size = ALIGN(size);
 	node = p->blocks;
 	last = NULL;
 	while (node) {

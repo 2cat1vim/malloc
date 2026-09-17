@@ -20,7 +20,7 @@
 // DEBUG.C MACROS
 #define SELECT_TYPE(n) (n == 0) ? BRED "TINY" RST : (n == 1) ? BRED "SMALL" RST : BRED "LARGE" RST
 #define IS_FREE(f) (f == true) ? "Free" : "Not Free"
-#define PTR(op) (op == 0) ? b : b + sizeof(t_block)
+#define PTR(op) (op == 0) ? b : (t_block*)((char*)b + sizeof(t_block))
 #define SIZE(op) (op == 0) ? b->size : b->size - sizeof(t_block)
 #define WHERE_AM_I(op) \
 	(op == 0) ? GRN "ptr status" RST " : ": CYN "ptr + sizeof(t_block) status" RST " : "

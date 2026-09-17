@@ -34,7 +34,7 @@ t_page* find_page_for_ptr(void *ptr) {
         t_page* head = share->page[i];
         while (head) {
             char *page_start = (char*)head;
-            char *page_end = head->ptr_end;
+            char *page_end = page_start + head->size;
             
             if ((char*)ptr >= page_start && (char*)ptr < page_end) {
                 return head;
@@ -53,6 +53,8 @@ free(void* ptr)
 
 	if (!page) {
 		epouts("error: invalid ptr");
+		print_hex(ptr);
+		epouts("");
 		return;
 	}
 

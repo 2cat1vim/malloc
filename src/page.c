@@ -25,9 +25,11 @@ mmap_page(t_page* p, t_type type, size_t size)
 	}
 
 	mp->type = type;
+	mp->size = size;
 	mp->ptr_end = (void*)mp + sizeof(t_page);
 	mp->blocks = NULL;
 	mp->next = NULL;
+	mp->prev = NULL;
 	return (mp);
 }
 
@@ -39,7 +41,7 @@ get_map_size(t_type type, size_t size)
 	map_size = 0;
 	if (type == LARGE) {
 		map_size = size + sizeof(t_page) + sizeof(t_block);
-		return (map_size);
+		return (ALIGN(map_size));
 	}
 	map_size = LIMIT(type);
 	return (map_size);

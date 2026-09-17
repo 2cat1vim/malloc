@@ -21,7 +21,7 @@ print_block(t_block *b, int op, int pos)
 	pout(WHERE_AM_I(op));
 	print_hex(PTR(op));
 	pout(" - ");
-	print_hex(b + b->size);
+	print_hex((char*)b + b->size);
 	pout(" : ");
 	pout(IS_FREE(b->free));
 	pout(" : ");
