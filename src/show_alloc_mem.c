@@ -6,27 +6,27 @@ print_page(t_page *p)
 	t_type	n;
 
 	n = p->type;
-	pout(SELECT_TYPE(n));
-	pout(" -> " YEL);
+	print(STDOUT_FILENO, SELECT_TYPE(n), false);
+	print(STDOUT_FILENO, " ->" YEL, false);
 	print_hex(p);
-	pout(RST "\n");
+	print(STDOUT_FILENO, RST "\n", false);
 }
 
 static void
 print_block(t_block *b, int op, int pos)
 {
-	pout(MAG "ALLOC[" RST );
+	print(STDOUT_FILENO, MAG "ALLOC[" RST, false);
 	print_nbr(pos);
-	pout(MAG "]" RST ": ");
-	pout(WHERE_AM_I(op));
+	print(STDOUT_FILENO, MAG "]" RST ": ", false);
+	print(STDOUT_FILENO, WHERE_AM_I(op), false);
 	print_hex(PTR(op));
-	pout(" - ");
+	print(STDOUT_FILENO, " - ", false);
 	print_hex((char*)b + b->size);
-	pout(" : ");
-	pout(IS_FREE(b->free));
-	pout(" : ");
+	print(STDOUT_FILENO, " : ", false);
+	print(STDOUT_FILENO, IS_FREE(b->free), false);
+	print(STDOUT_FILENO, " : ", false);
 	print_nbr(SIZE(op));
-	pouts(" bytes");
+	print(STDOUT_FILENO, " bytes", true);
 }
 
 void
@@ -56,7 +56,7 @@ show_alloc_mem(void)
 			h_p = h_p->next;
 		}
 	}
-	pout("Total : ");
+	print(STDOUT_FILENO, "Total : ", false);
 	print_nbr(total);
-	pouts(" bytes");
+	print(STDOUT_FILENO, " bytes", true);
 }

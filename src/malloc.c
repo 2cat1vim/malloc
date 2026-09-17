@@ -1,7 +1,5 @@
 #include "../include/malloc.h"
 
-/* NEED GUARDS */
-
 void* 
 malloc(size_t size)
 {
@@ -10,6 +8,7 @@ malloc(size_t size)
 	if (size == 0) {
 		return (NULL);
 	}
+
 	if (size + sizeof(t_block) <= TINY_BYTES) {
 		b = create_block(size, TINY);
 	}
@@ -19,6 +18,7 @@ malloc(size_t size)
 	else {
 		b = create_block(size, LARGE);
 	}
+
 	if (!b) {
 		return (NULL);
 	}

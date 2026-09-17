@@ -51,12 +51,12 @@ bool page_has_space(t_page* page, size_t size);
 t_page* search_page_space(size_t size, t_type type);
 t_page* create_page(t_type type, size_t size);
 t_page* lookup_page(size_t size, t_type type);
-t_page* find_page_for_ptr(void *ptr);
+t_page* get_page(void *ptr);
 
 t_block* add_block(t_page *p, size_t size, t_block* last);
 t_block* select_block(t_page *p, size_t size);
 t_block* create_block(size_t size, t_type type);
-bool is_valid_block_ptr(t_page *page, void *ptr);
+bool block_exist(t_page *page, void *ptr);
 
 void print_hex(void *p);
 void print_nbr(size_t n);
@@ -66,5 +66,6 @@ void epout(const char* s);
 void epouts(const char* s);
 size_t len(const char *s);
 void *ft_memcpy(void *dest, const void *src, size_t n);
+void print(int fd, const char* s, bool ln);
 
 # endif

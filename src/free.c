@@ -1,13 +1,11 @@
 #include "../include/malloc.h"
 
-static int
+static bool
 free_ptr(t_block* b, t_page* p)
 {
 	if (b->free == true) {
-		epout("error: This region is set to FREE, you cannot free it again (");
-		print_hex((char*)b);
-		epouts(")");
-		return (-1);
+		print(STDERR_FILENO, "error : free : invalid ptr", true);
+		return (false);
 	}
 	else if (p->type == LARGE) {
 		if (p->prev) {
@@ -18,34 +16,34 @@ free_ptr(t_block* b, t_page* p)
 		}
 
 		if (munmap(p, p->size) == -1) {
-			epouts("error: munmap failed");
-			return (-1);
+			print(STDERR_FILENO, "error : free : munmap failed", true);
+			return (false);
 		}
-		return (0);
+		return (true);
 	}
 	else {
 		b->free = true;
 	}
-	return (0);
+	return (true);
 }
 
 void
 free(void* ptr)
 {
 	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
-	t_page* page = find_page_for_ptr(ptr);
 
+	t_page* page = get_page(ptr);
 	if (!page) {
-		epouts("error: invalid ptr");
+		print(STDERR_FILENO, "error : free : invalid ptr", true);
 		return;
 	}
 
-	if (!is_valid_block_ptr(page, ptr)) {
-		epouts("error: invalid ptr");
+	if (!block_exist(page, ptr)) {
+		print(STDERR_FILENO, "error : free : invalid ptr", true);
 		return;
 	}
 
-	if (free_ptr((t_block *)cast_ptr_block, page) == -1) {
+	if (!free_ptr((t_block *)cast_ptr_block, page)) {
 		return ;
 	}
 }

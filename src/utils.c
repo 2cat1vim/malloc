@@ -9,7 +9,6 @@ len(const char *str) {
 	return (i);
 }
 
-
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
@@ -27,36 +26,15 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-void
-pout(const char* s)
-{
-	if (!s) {
+void print(int fd, const char* s, bool ln) {
+	if (fd != STDOUT_FILENO && fd != STDERR_FILENO) {
 		return ;
 	}
-	write(1, s, len(s));
-}
-
-void
-pouts(const char* s)
-{
-	pout(s);
-	write(1, "\n", 1);
-}
-
-void
-epout(const char* s)
-{
-	if (!s) {
-		return ;
+	write(fd, s, len(s));
+	if (ln) {
+		write(fd, "\n", 1);
 	}
-	write(2, s, len(s));
-}
 
-void
-epouts(const char* s)
-{
-	pout(s);
-	write(2, "\n", 1);
 }
 
 void
