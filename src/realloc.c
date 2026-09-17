@@ -20,22 +20,22 @@ realloc_ptr(t_block *b, size_t size)
 		return (cast_block_ptr + sizeof(t_block));
 	}
 	else {
+		size_t old_data_size;
+
 		newptr = malloc(size);
 		if (!newptr) {
 			return (NULL);
 		}
-		ft_memcpy((char*)newptr, (char*)cast_block_ptr + sizeof(t_block), b->size);
+		old_data_size = b->size - sizeof(t_block);
+		ft_memcpy((char*)newptr, (char*)cast_block_ptr + sizeof(t_block), old_data_size);
 		free(cast_block_ptr + sizeof(t_block));
+		return (newptr);
 	}
-	return (NULL);
 }
 
 void*
 realloc(void* ptr, size_t size)
 {
-	char* cast_ptr_block;
-	t_page* page;
-
 	if (!ptr) {
 		return (malloc(size));
 	}
@@ -45,9 +45,17 @@ realloc(void* ptr, size_t size)
 		return (NULL);
 	}
 
-	cast_ptr_block = ptr;
-	cast_ptr_block -= sizeof(t_block);
-	page = (t_page*)(cast_ptr_block - sizeof(t_page));
+	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
+	t_page* page = find_page_for_ptr(ptr);
+	if (!page) {
+		epouts("error: invalid ptr");
+		return (NULL);
+	}
+
+	if (!is_valid_block_ptr(page, ptr)) {
+		epouts("error: invalid ptr");
+		return (NULL);
+	}
 
 	if ((page->type == LARGE) && (size < (size_t)SMALL_MMAP)) {
 		void *newptr = malloc(size);

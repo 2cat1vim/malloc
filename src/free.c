@@ -29,22 +29,6 @@ free_ptr(t_block* b, t_page* p)
 	return (0);
 }
 
-t_page* find_page_for_ptr(void *ptr) {
-    for (size_t i = 0; i < 3; i++) {
-        t_page* head = share->page[i];
-        while (head) {
-            char *page_start = (char*)head;
-            char *page_end = page_start + head->size;
-            
-            if ((char*)ptr >= page_start && (char*)ptr < page_end) {
-                return head;
-            }
-            head = head->next;
-        }
-    }
-    return NULL;
-}
-
 void
 free(void* ptr)
 {
@@ -53,8 +37,11 @@ free(void* ptr)
 
 	if (!page) {
 		epouts("error: invalid ptr");
-		print_hex(ptr);
-		epouts("");
+		return;
+	}
+
+	if (!is_valid_block_ptr(page, ptr)) {
+		epouts("error: invalid ptr");
 		return;
 	}
 

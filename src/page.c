@@ -93,6 +93,22 @@ create_share() {
 	return (true);
 }
 
+t_page* find_page_for_ptr(void *ptr) {
+    for (size_t i = 0; i < 3; i++) {
+        t_page* head = share->page[i];
+        while (head) {
+            char *page_start = (char*)head;
+            char *page_end = page_start + head->size;
+            
+            if ((char*)ptr >= page_start && (char*)ptr < page_end) {
+                return head;
+            }
+            head = head->next;
+        }
+    }
+    return NULL;
+}
+
 t_page
 *search_page_space(size_t size, t_type type)
 {
@@ -132,12 +148,14 @@ bool
 page_has_space(t_page* page, size_t size)
 {
 	size_t limit;
+	size_t used;
 
 	if (page->type == LARGE) {
 		return (false);
 	}
 	limit = LIMIT(page->type);
-	if (page->size + size <= limit) {
+	used = (size_t)((char*)page->ptr_end - (char*)page);
+	if (used + size <= limit) {
 		return (true);
 	}
 	return (false);

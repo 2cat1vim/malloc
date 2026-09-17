@@ -61,3 +61,19 @@ create_block(size_t size, t_type type)
 	}
 	return (b);
 }
+
+bool
+is_valid_block_ptr(t_page *page, void *ptr)
+{
+	t_block *b = page->blocks;
+	char *user_ptr;
+
+	while (b) {
+		user_ptr = (char*)b + sizeof(t_block);
+		if (user_ptr == (char*)ptr) {
+			return (true);
+		}
+		b = b->next;
+	}
+	return (false);
+}
