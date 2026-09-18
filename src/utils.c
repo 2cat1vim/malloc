@@ -48,10 +48,10 @@ print_hex(void* p)
 	addr = (unsigned long)p;
 	i = 0;
 	if (addr == 0) {
-		pout("0x0");
+		print(STDOUT_FILENO, "0x0", false);
 		return ;
 	}
-	pout("0x");
+	print(STDOUT_FILENO, "0x0", false);
 	while (addr > 0) {
 		buffer[i++] = base[addr % 16];
 		addr /= 16;

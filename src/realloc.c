@@ -45,7 +45,6 @@ realloc(void* ptr, size_t size)
 		return (NULL);
 	}
 
-	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
 	t_page* page = get_page(ptr);
 	if (!page) {
 		print(STDERR_FILENO, "error : realloc : invalid ptr", true);
@@ -66,5 +65,7 @@ realloc(void* ptr, size_t size)
 		free(ptr);
 		return (newptr);
 	}
+	
+	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
 	return (realloc_ptr((t_block*)cast_ptr_block, (size + sizeof(t_block))));
 }

@@ -30,7 +30,9 @@ free_ptr(t_block* b, t_page* p)
 void
 free(void* ptr)
 {
-	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
+	if (!ptr) {
+		return ;
+	}
 
 	t_page* page = get_page(ptr);
 	if (!page) {
@@ -43,6 +45,7 @@ free(void* ptr)
 		return;
 	}
 
+	char* cast_ptr_block = (char*)ptr - sizeof(t_block);
 	if (!free_ptr((t_block *)cast_ptr_block, page)) {
 		return ;
 	}

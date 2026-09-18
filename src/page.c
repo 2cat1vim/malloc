@@ -15,7 +15,7 @@ t_page* get_page(void *ptr) {
             head = head->next;
         }
     }
-    return NULL;
+    return (NULL);
 }
 
 t_page*
@@ -24,7 +24,7 @@ mmap_page(t_page* p, t_type type, size_t size)
 	t_page* mp = NULL;
 
 	if (getrlimit(RLIMIT_AS, &share->rlim) == -1) {
-		epouts("error: getrlimit failed\n");
+		print(STDERR_FILENO, "error : page : getrlimit failed", true);
 	}
 	if (size > share->rlim.rlim_cur) {
 		print(STDERR_FILENO, "error : page : map size is larger than rlimit", true);

@@ -60,10 +60,6 @@ bool block_exist(t_page *page, void *ptr);
 
 void print_hex(void *p);
 void print_nbr(size_t n);
-void pout(const char* s);
-void pouts(const char* s);
-void epout(const char* s);
-void epouts(const char* s);
 size_t len(const char *s);
 void *ft_memcpy(void *dest, const void *src, size_t n);
 void print(int fd, const char* s, bool ln);

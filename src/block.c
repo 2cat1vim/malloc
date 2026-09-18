@@ -4,11 +4,11 @@ bool
 block_exist(t_page *page, void *ptr)
 {
 	t_block *b = page->blocks;
-	char *user_ptr;
+	char *cptr;
 
 	while (b) {
-		user_ptr = (char*)b + sizeof(t_block);
-		if (user_ptr == (char*)ptr) {
+		cptr = (char*)b + sizeof(t_block);
+		if (cptr == (char*)ptr) {
 			return (true);
 		}
 		b = b->next;
