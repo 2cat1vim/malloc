@@ -16,7 +16,7 @@
 # define SIZE_BY_TYPE(type, size) \
     (type == TINY) ? (size_t)TINY_BYTES : (type == SMALL) ? (size_t)SMALL_BYTES : (size_t)size
 #define ALIGN(size) \
-	(((size) + 7) / 8 * 8)
+    (((size) + 15) & ~15)
 
 // DEBUG.C MACROS
 #define SELECT_TYPE(n) (n == 0) ? BRED "TINY" RST : (n == 1) ? BRED "SMALL" RST : BRED "LARGE" RST

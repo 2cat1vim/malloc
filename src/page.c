@@ -55,7 +55,7 @@ get_map_size(t_type type, size_t size)
 	map_size = 0;
 	if (type == LARGE) {
 		map_size = size + sizeof(t_page) + sizeof(t_block);
-		return (ALIGN(map_size));
+		return (map_size);
 	}
 	map_size = LIMIT(type);
 	return (map_size);
@@ -150,7 +150,7 @@ lookup_page(size_t size, t_type type)
 {
 	t_page* p;
 
-	p = search_page_space(size + sizeof(t_block), type);
+	p = search_page_space(ALIGN(size + sizeof(t_block)), type);
 	if (!p) {
 		p = create_page(type, size);
 		if (!p) {
