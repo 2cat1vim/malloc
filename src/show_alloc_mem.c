@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "../includes/malloc.h"
 
 static void
 print_page(t_page *p)
@@ -7,7 +7,7 @@ print_page(t_page *p)
 
 	n = p->type;
 	print(STDOUT_FILENO, SELECT_TYPE(n), false);
-	print(STDOUT_FILENO, " ->" YEL, false);
+	print(STDOUT_FILENO, " -> " YEL, false);
 	print_hex(p);
 	print(STDOUT_FILENO, RST "\n", false);
 }

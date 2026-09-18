@@ -1,6 +1,4 @@
-#include "../include/malloc.h"
-
-/* NEED GUARDS */
+#include "../includes/malloc.h"
 
 static void*
 realloc_ptr(t_block *b, size_t size)

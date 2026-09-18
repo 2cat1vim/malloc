@@ -1,4 +1,4 @@
-#include "../include/malloc.h"
+#include "../includes/malloc.h"
 
 bool
 block_exist(t_page *page, void *ptr)
@@ -46,6 +46,7 @@ select_block(t_page* p, size_t size)
 	while (node) {
 		if (node->free == true && size <= node->size) {
 			node->size = size;
+			node->free = false;
 			return (node);
 		}
 		last = node;
